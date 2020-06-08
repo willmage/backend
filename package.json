@@ -1,0 +1,20 @@
+{
+  "description": "We like to keep things simple here.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.5",
+    "file-type": "^12.0.0",
+    "multer": "^1.4.2"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://github.com/willmage"
+  }
+  
+}
