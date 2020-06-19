@@ -2,22 +2,26 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 const multer = require('multer');
 const fileType = require('file-type');
+const {nanoid} = require('nanoid')
+
+require('dotenv').config({path: __dirname + '/.env'})
 
 const app = express();
+const bucket = require('./firebase')
 
 /* CONFIG */
-const accepted_extensions = ['jpg', 'png', 'gif'];
-const upload_folder = 'tmp';
+const accepted_extensions = ['jpg', 'png', 'gif', 'jpeg', 'webp', 'ico'];
 
+app.set('view engine', 'ejs')
+app.set('views', __dirname + '/views');
 app.use(express.static('public'));
-app.use('/up', express.static(upload_folder));
 app.use(fileUpload({
   createParentPath: true
 }));
 
 const upload = multer({
   limits: { 
-    fileSize: 5 * 1024 * 1024,  // 5 MB upload limit
+    fileSize: 10 * 1024 * 1024,  // 5 MB upload limit
     files: 1                    // 1 file
   },
   fileFilter: (req, file, cb) => {
@@ -35,27 +39,75 @@ const upload = multer({
 function validate_format(req, res, next) { 
   // If no files were selected
   if (!req.files) {
-      return res.status(400).send('No files were uploaded.');
+      return res.redirect('/')
   };
 
   // Image/mime validation
-  let mime = fileType(req.files.image.data);
+  const mime = fileType(req.files.image.data);
   if(!mime || !accepted_extensions.includes(mime.ext))
     return next(res.status(500).send('The uploaded file is not in ' + accepted_extensions.join(", ") + ' format!'));
   next();
 }
-// Upload post route
-app.post('/upload', upload.single('image'), validate_format, (req, res, next) => {
-  let upFile = req.files.image;
-  let mime = fileType(req.files.image.data);
-  
-  // Use the mv() method to place the file somewhere on your server
-  upFile.mv(`${upload_folder}/${upFile.md5}.${mime.ext}`, (err) => {
-    if (err)
-      return res.status(500).send(err);
-    let html = `<meta http-equiv="refresh" content="0; URL='/up/${upFile.md5}.${mime.ext}'" /><a style="text-align: center" href="/up/${upFile.md5}.${mime.ext}>Image not loading? Click here?</a>"`;
-    res.send(html);
-  });
+// Index get route
+app.get('/', async (req, res) => {
+  const fileCount = (await bucket.getFiles())[0].length
+  res.render('index', {fileCount})
+});
+app.get('/main.css', (req, res) => {
+  res.sendFile(__dirname + '/assets/main.css')
+});
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(__dirname + '/assets/favicon.ico')
+});
+
+//no script
+app.get('/noscript', (req, res) => {
+  res.send('<title>Willmage</title><h1>Please enable Javascript.</h1><a href="/">Okay, I did - now let me in!</a>')
+})
+
+//redirect for browser-access upload page
+app.get('/upload', (req, res) => {
+  res.redirect('/')
+});
+//discord link
+app.get('/discord', (req, res) => {
+  res.redirect('https://discord.gg/SS7cdCh')
+});
+
+//redirect for /up with no file name after it
+app.get('/up', (req, res) => {
+  res.redirect('/')
+});
+
+//stripe successful purchase
+app.get('/success', (req, res) => {
+  res.send('<title>Willmage</title><h1>Purchase success!</h1> Join our Discord for more information: <a href="https://willmage.com/discord">https://willmage.com/discord</a>')
+});
+
+app.get('/up/:file', async (req, res) => {
+  const file = bucket.file(req.params.file)
+  if(!(await file.exists())[0]) return res.status(404).send('<style>body {animation: sweep 1s ease-in-out;}</style><link rel="icon" href="https://cdn.glitch.com/583d7fb4-93c2-40df-9c7f-09f69aa9906e%2FPicsArt_06-09-02.10.21.png"><title>404 - Willmage</title><link rel="stylesheet" href="https://willm.xyz/404.css"><body style="margin: 0; padding: 0"><div class="no-signal-screen"><div class="dissortion"></div><p class="no-signal-screen__info">404 <span style="color:white">-</span> File Not Found</p></div></body>')
+  file.createReadStream().pipe(res)
+});
+
+// Upload post route 
+app.post('/upload', upload.single('image'), validate_format, async (req, res, next) => {
+  const upFile = req.files.image
+  const mime = fileType(req.files.image.data)
+  const id = nanoid(Math.floor(Math.random() * 6) + 4)
+  await bucket.file(`${id}.${mime.ext}`).save(upFile.data, {contentType: upFile.mimetype, public: true, resumable: false}).catch(console.error)
+  res.redirect(`/up/${id}.${mime.ext}`)
+});
+
+//pasta lol
+app.get('/pasta', (req, res) => {
+res.send('pasta mhm')
+
+})
+
+//404 page
+app.use(function(req, res, next) {
+    res.status(404).send('<style>body {animation: sweep 1s ease-in-out;}</style><link rel="icon" href="https://cdn.glitch.com/583d7fb4-93c2-40df-9c7f-09f69aa9906e%2FPicsArt_06-09-02.10.21.png"><title>404 - Willmage</title><link rel="stylesheet" href="https://willm.xyz/404.css"><body style="margin: 0; padding: 0"><div class="no-signal-screen"><div class="dissortion"></div><p class="no-signal-screen__info">404 <span style="color:white">-</span> Page Not Found</p></div></body>');
 });
 
 // Server listener
