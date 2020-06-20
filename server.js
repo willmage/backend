@@ -2,12 +2,20 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 const multer = require('multer');
 const fileType = require('file-type');
-const {nanoid} = require('nanoid')
+const {nanoid} = require('nanoid');
+var admin = require("firebase-admin");
+
+var serviceAccount = "serviceAccountKey.json";
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://willmage-backend.firebaseio.com"
+});
 
 require('dotenv').config({path: __dirname + '/.env'})
 
 const app = express();
-//const bucket = require('./firebase')
+const bucket = require('./firebase')
 
 /* CONFIG */
 const accepted_extensions = ['jpg', 'png', 'gif', 'jpeg', 'webp', 'ico'];
@@ -49,12 +57,10 @@ function validate_format(req, res, next) {
   next();
 }
 // Index get route
-/*
 app.get('/', async (req, res) => {
   const fileCount = (await bucket.getFiles())[0].length
   res.render('index', {fileCount})
 });
-*/
 app.get('/main.css', (req, res) => {
   res.sendFile(__dirname + '/assets/main.css')
 });
@@ -86,7 +92,6 @@ app.get('/success', (req, res) => {
   res.send('<title>Willmage</title><h1>Purchase success!</h1> Join our Discord for more information: <a href="https://willmage.com/discord">https://willmage.com/discord</a>')
 });
 
-/*
 app.get('/up/:file', async (req, res) => {
   const file = bucket.file(req.params.file)
   if(!(await file.exists())[0]) return res.status(404).send('<style>body {animation: sweep 1s ease-in-out;}</style><link rel="icon" href="https://cdn.glitch.com/583d7fb4-93c2-40df-9c7f-09f69aa9906e%2FPicsArt_06-09-02.10.21.png"><title>404 - Willmage</title><link rel="stylesheet" href="https://willm.xyz/404.css"><body style="margin: 0; padding: 0"><div class="no-signal-screen"><div class="dissortion"></div><p class="no-signal-screen__info">404 <span style="color:white">-</span> File Not Found</p></div></body>')
@@ -101,7 +106,6 @@ app.post('/upload', upload.single('image'), validate_format, async (req, res, ne
   await bucket.file(`${id}.${mime.ext}`).save(upFile.data, {contentType: upFile.mimetype, public: true, resumable: false}).catch(console.error)
   res.redirect(`/up/${id}.${mime.ext}`)
 });
-*/
 
 //pasta lol
 app.get('/pasta', (req, res) => {
