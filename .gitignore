@@ -1,0 +1,6 @@
+firebase.json
+.env
+node_modules
+views
+pnpm-lock.yaml
+assets
