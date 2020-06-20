@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Willmage is a free image host by Will McCrudden." />
+<meta property="og:description" content="Willmage is a free image host by Will McCrudden." />
+<link rel="canonical" href="https://willmage.com" />
+<meta property="og:url" content="https://willmage.com" />
+<meta name="theme-color" content="#00a2ff">
+<meta charset="utf-8">
+<title>Willmage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="/main.css">
+<link rel="icon" href="/favicon.ico">
+<style>
+    </style>
+</head>
+<body>
+<ul class="topnav">
+<li><div class="title-main"><a href="/" class="Hover"> Willmage</a></div></li>
+<li class="ClickImage">
+<a href="/discord" target="_blank" rel="noopener" style="padding: 0">
+<img src="https://i.vgy.me/CQrfco.png" style="width:30px;height:30px;" title="Discord">
+</a>
+</li>
+<li class="ClickImage">
+<a href="https://twitter.com/use_willmage" target="_blank" rel="noopener" style="padding: 0">
+<img src="https://i.vgy.me/7s9zix.png" style="width:30px;height:30px;" title="Twitter">
+</a>
+</li>
+<li class="ClickImage">
+<a href="https://github.com/willmage" target="_blank" rel="noopener" style="padding: 0">
+<img src="https://image.flaticon.com/icons/svg/25/25231.svg" style="width:30px;height:30px;" title="Twitter">
+</a>
+</li>
+<li class="ClickImage">
+<img id="checkout-button-plan_F0tTAbibm3MSC5" role="link" src="https://www.freepnglogos.com/uploads/heart-png/heart-image-13.png" style="width:35px;height:30px;" title="Support Us">
+</li>
+
+</ul>
+<div id="error-message"></div>
+<hr width="50%">
+<div class="container">
+<center><form onsubmit="if (!window.__cfRLUnblockHandlers) return false; Uploading()" action="/upload" method="post" enctype="multipart/form-data" data-cf-modified-6097ba6c3c1c4ee1f227a3b6-="">
+<input style="cursor: pointer;" type="file" id="file" name="image" accept="image/x-png,image/gif,image/jpeg,image/webp,image/x-icon" required>
+<button class="btn" type="submit" style="border-radius: 4px; cursor: pointer">Upload</button>
+</form></center>
+</div>
+<hr width="90%">
+<center>
+<code style="color: black">Willmage</code> is a free, <strong>open source</strong> image hosting site.
+<br>
+The limit is 10MB. <strong>14</strong> images uploaded!
+<br>
+
+
+</center>
+<br><br>
+<style>
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #23272A;
+   color: white;
+   text-align: center;
+  border: 1px solid black;
+}
+</style>
+<div class="footer">
+Willmage and its code is owned by <a href="https://willm.xyz">Will McCrudden</a>.
+<br>Uploaded content is owned by their owners. (<strong>&copy 2020</strong>)
+</div>
+<script src="https://ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="6097ba6c3c1c4ee1f227a3b6-|49" defer=""></script></body>
+
+<script async src="https://platform.twitter.com/widgets.js" type="6097ba6c3c1c4ee1f227a3b6-text/javascript"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" type="6097ba6c3c1c4ee1f227a3b6-text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9" type="6097ba6c3c1c4ee1f227a3b6-text/javascript"></script>
+
+<script src="https://js.stripe.com/v3" type="6097ba6c3c1c4ee1f227a3b6-text/javascript"></script>
+<script type="6097ba6c3c1c4ee1f227a3b6-text/javascript">
+(function() {
+  var stripe = Stripe('pk_live_Y2Kt6w9nfaUKLgSB8Pez9VbW');
+
+  var checkoutButton = document.getElementById('checkout-button-plan_F0tTAbibm3MSC5');
+  checkoutButton.addEventListener('click', function () {
+    // When the customer clicks on the button, redirect
+    // them to Checkout.
+    stripe.redirectToCheckout({
+      lineItems: [{price: 'plan_F0tTAbibm3MSC5', quantity: 1}],
+      mode: 'subscription',
+      // Do not rely on the redirect to the successUrl for fulfilling
+      // purchases, customers may not always reach the success_url after
+      // a successful payment.
+      // Instead use one of the strategies described in
+      // https://stripe.com/docs/payments/checkout/fulfillment
+      successUrl: 'https://willmage.com/success',
+      cancelUrl: 'https://willmage.com/',
+    })
+    .then(function (result) {
+      if (result.error) {
+        // If `redirectToCheckout` fails due to a browser or network
+        // error, display the localized error message to your customer.
+        var displayError = document.getElementById('error-message');
+        displayError.textContent = result.error.message;
+      }
+    });
+  });
+})();
+</script>
+<script type="6097ba6c3c1c4ee1f227a3b6-text/javascript">
+    
+    function Uploading() {
+      
+        const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+})
+
+Toast.fire({
+  title: 'Uploading! Page will redirect soon.'
+})
+    }
+
+  var uploadField = document.getElementById("file");
+
+uploadField.onchange = function() {
+    if(this.files[0].size > 10485760){ // max size = 5mb
+      /*Swal.fire({
+  title: "File is too big!",
+  text: 'The max file size is 10MB.',
+  cancelButtonText: 'Close',
+        
+})*/
+      const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  onOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+
+Toast.fire({
+  icon: 'error',
+  title: 'Max file size is 10MB'
+})
+       //alert("File is too big! Max file size is 5MB.");
+       this.value = "";
+    }
+};
+  </script>
+<noscript>
+<meta http-equiv="refresh" content="0; URL='/noscript'" />
+</noscript>
+</html>

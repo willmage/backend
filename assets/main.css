@@ -1,0 +1,142 @@
+body {
+    animation: sweep 1s ease-in-out
+}
+
+form {
+    justify-content: space-between
+}
+
+input.btn {
+    flex: .8
+}
+
+button.btn {
+    flex: .15
+}
+
+.panel {
+    border: 5px outset blue;
+    background-color: #2c2f33;
+    text-align: center;
+    color: #fff;
+    margin: 20px;
+    padding: 10px
+}
+
+details summary::-webkit-details-marker {
+    display: none;
+    outline: none;
+    outline: none
+}
+
+details[open] summary~* {
+    animation: sweep .5s ease-in-out
+}
+
+@keyframes sweep {
+    0% {
+        opacity: 0;
+        margin-left: -10px
+    }
+
+    100% {
+        opacity: 1;
+        margin-left: 0
+    }
+}
+
+button {
+    cursor: pointer
+}
+
+::-webkit-scrollbar {
+    width: 5px
+}
+
+::-webkit-scrollbar-track {
+    background: #2f2f2f
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0566da
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0451af
+}
+
+::-webkit-scrollbar {
+    width: 12.5px
+}
+
+body {
+    color: #fff;
+    margin: 0;
+    background-color: #242424
+}
+
+.light-mode {
+    background-color: #fff;
+    color: #000
+}
+
+head1.light-mode {
+    color: #000;
+    font-size: 40px
+}
+
+ul.topnav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0566da
+}
+
+head1 {
+    color: White;
+    font-size: 40px
+}
+
+ul.topnav li {
+    float: left
+}
+
+ul.topnav li a {
+    display: block;
+    color: #fff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none
+}
+
+.Hover {
+    border: none;
+    color: #fff;
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 16px;
+    transition: .5s;
+    background-color: #0d7afc
+}
+
+ul.topnav li a.active {
+    background-color: #4caf50
+}
+
+ul.topnav li.right {
+    float: right
+}
+
+div.title-main {
+    font-weight: 700;
+    text-transform: uppercase
+}
+
+ul.topnav li.ClickImage {
+    float: right;
+    padding-top: 11px;
+    padding-right: 11px;
+    cursor: pointer;
+    opacity: 1
+}
